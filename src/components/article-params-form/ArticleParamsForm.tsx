@@ -27,17 +27,17 @@ type articleProps = {
 
 export const ArticleParamsForm = (props: articleProps) => {
 	const [sideBarState, setSideBarState] = useState(defaultArticleState);
-	const [openMenu, setOpenMenu] = useState<boolean>(false);
+	const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 	const menuRef = useRef<HTMLDivElement>(null);
 
 	useOutsideClickClose({
-		isOpen: openMenu,
+		isOpen: isMenuOpen,
 		rootRef: menuRef,
-		onChange: setOpenMenu,
+		onChange: setIsMenuOpen,
 	});
 
 	const toogleMenuVisibility = () => {
-		setOpenMenu((openMenu) => !openMenu);
+		setIsMenuOpen((openMenu) => !openMenu);
 	};
 
 	const handleSetSideBarState = (
@@ -68,10 +68,10 @@ export const ArticleParamsForm = (props: articleProps) => {
 
 	return (
 		<>
-			<ArrowButton isOpen={openMenu} onClick={toogleMenuVisibility} />
+			<ArrowButton isOpen={isMenuOpen} onClick={toogleMenuVisibility} />
 			<aside
 				ref={menuRef}
-				className={clsx(styles.container, openMenu && styles.container_open)}>
+				className={clsx(styles.container, isMenuOpen && styles.container_open)}>
 				<form className={styles.form} onSubmit={handleSubmitArticleState}>
 					<Text as='h2' weight={800} size={31} uppercase>
 						задайте параметры
