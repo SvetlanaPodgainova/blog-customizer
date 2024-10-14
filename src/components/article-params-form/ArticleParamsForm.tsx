@@ -6,7 +6,10 @@ import { Text } from 'src/ui/text';
 import { Select } from 'src/ui/select';
 import {
 	ArticleStateType,
+	backgroundColors,
+	contentWidthArr,
 	defaultArticleState,
+	fontColors,
 	fontFamilyOptions,
 	OptionType,
 } from 'src/constants/articleProps';
@@ -27,12 +30,12 @@ export const ArticleParamsForm = () => {
 	};
 
 	const handleSetState = (
-		propertyName: keyof ArticleStateType,
+		optionName: keyof ArticleStateType,
 		option: OptionType
 	) => {
 		setArticleState((prevState) => ({
 			...prevState,
-			[propertyName]: option, // Обновляем указанное свойство
+			[optionName]: option, // Обновляем указанное свойство
 		}));
 	};
 
@@ -53,10 +56,27 @@ export const ArticleParamsForm = () => {
 						title={'шрифт'}
 						selected={articleState.fontFamilyOption}
 						options={fontFamilyOptions}
-						onChange={(option) =>
-							handleSetState('fontFamilyOption', option)
-						}></Select>
+						onChange={(option) => handleSetState('fontFamilyOption', option)}
+					/>
+					<Select
+						title={'Цвет шрифта'}
+						selected={articleState.fontColor}
+						options={fontColors}
+						onChange={(option) => handleSetState('fontColor', option)}
+					/>
 					<Separator />
+					<Select
+						title='Цвет фона'
+						options={backgroundColors}
+						selected={articleState.backgroundColor}
+						onChange={(option) => handleSetState('backgroundColor', option)}
+					/>
+					<Select
+						title='Ширина контента'
+						options={contentWidthArr}
+						selected={articleState.contentWidth}
+						onChange={(option) => handleSetState('contentWidth', option)}
+					/>
 					<div className={styles.bottomContainer}>
 						<Button
 							title='Сбросить'
