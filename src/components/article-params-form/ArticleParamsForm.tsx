@@ -11,36 +11,46 @@ import {
 	defaultArticleState,
 	fontColors,
 	fontFamilyOptions,
+	fontSizeOptions,
 	OptionType,
 } from 'src/constants/articleProps';
 
 import styles from './ArticleParamsForm.module.scss';
 import { Separator } from 'src/ui/separator';
+import { RadioGroup } from 'src/ui/radio-group';
 
-// type articleProps ={
+type articleProps = {
+	articleStateSubmit: (newState: ArticleStateType) => void;
+	articleStateReset: () => void;
+};
 
-// }
-
-export const ArticleParamsForm = () => {
-	const [articleState, setArticleState] = useState(defaultArticleState); // стейт состояния параметров формы
-	const [openMenu, setOpenMenu] = useState<boolean>(false); // стейт для состояния сайдбара
+export const ArticleParamsForm = (props: articleProps) => {
+	const [sideBarState, setSideBarState] = useState(defaultArticleState);
+	const [openMenu, setOpenMenu] = useState<boolean>(false);
 
 	const toogleMenuVisibility = () => {
 		setOpenMenu((openMenu) => !openMenu);
 	};
 
-	const handleSetState = (
+	const handleSetSideBarState = (
 		optionName: keyof ArticleStateType,
 		option: OptionType
 	) => {
-		setArticleState((prevState) => ({
+		setSideBarState((prevState) => ({
 			...prevState,
-			[optionName]: option, // Обновляем указанное свойство
+			[optionName]: option,
 		}));
 	};
 
-	const handleResetForm = () => {
-		setArticleState(defaultArticleState);
+	const handleSubmitArticleState = (
+		event: React.FormEvent<HTMLFormElement>
+	) => {
+		event.preventDefault();
+		props.articleStateSubmit(sideBarState);
+	};
+
+	const handleResetSideBarState = () => {
+		props.articleStateReset();
 	};
 
 	return (
@@ -48,41 +58,54 @@ export const ArticleParamsForm = () => {
 			<ArrowButton isOpen={openMenu} onClick={toogleMenuVisibility} />
 			<aside
 				className={clsx(styles.container, openMenu && styles.container_open)}>
-				<form className={styles.form}>
+				<form className={styles.form} onSubmit={handleSubmitArticleState}>
 					<Text as='h2' weight={800} size={31} uppercase>
 						задайте параметры
 					</Text>
 					<Select
 						title={'шрифт'}
-						selected={articleState.fontFamilyOption}
 						options={fontFamilyOptions}
-						onChange={(option) => handleSetState('fontFamilyOption', option)}
+						selected={sideBarState.fontFamilyOption}
+						onChange={(option) =>
+							handleSetSideBarState('fontFamilyOption', option)
+						}
+					/>
+					<RadioGroup
+						name='fontSize'
+						title='размер шрифта'
+						options={fontSizeOptions}
+						selected={sideBarState.fontSizeOption}
+						onChange={(option) =>
+							handleSetSideBarState('fontSizeOption', option)
+						}
 					/>
 					<Select
 						title={'Цвет шрифта'}
-						selected={articleState.fontColor}
 						options={fontColors}
-						onChange={(option) => handleSetState('fontColor', option)}
+						selected={sideBarState.fontColor}
+						onChange={(option) => handleSetSideBarState('fontColor', option)}
 					/>
 					<Separator />
 					<Select
 						title='Цвет фона'
 						options={backgroundColors}
-						selected={articleState.backgroundColor}
-						onChange={(option) => handleSetState('backgroundColor', option)}
+						selected={sideBarState.backgroundColor}
+						onChange={(option) =>
+							handleSetSideBarState('backgroundColor', option)
+						}
 					/>
 					<Select
 						title='Ширина контента'
 						options={contentWidthArr}
-						selected={articleState.contentWidth}
-						onChange={(option) => handleSetState('contentWidth', option)}
+						selected={sideBarState.contentWidth}
+						onChange={(option) => handleSetSideBarState('contentWidth', option)}
 					/>
 					<div className={styles.bottomContainer}>
 						<Button
 							title='Сбросить'
 							htmlType='reset'
 							type='clear'
-							onClick={handleResetForm}
+							onClick={handleResetSideBarState}
 						/>
 						<Button title='Применить' htmlType='submit' type='apply' />
 					</div>
