@@ -50,6 +50,10 @@ export const ArticleParamsForm = (props: articleProps) => {
 		}));
 	};
 
+	const handleResetSideBar = () => {
+		setSideBarState(defaultArticleState);
+	};
+
 	const handleSubmitArticleState = (
 		event: React.FormEvent<HTMLFormElement>
 	) => {
@@ -58,6 +62,7 @@ export const ArticleParamsForm = (props: articleProps) => {
 	};
 
 	const handleResetSideBarState = () => {
+		handleResetSideBar();
 		props.articleStateReset();
 	};
 
