@@ -1,7 +1,7 @@
 import { ArrowButton } from 'src/ui/arrow-button';
 import { Button } from 'src/ui/button';
 import { clsx } from 'clsx';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Text } from 'src/ui/text';
 import { Select } from 'src/ui/select';
 import {
@@ -18,6 +18,7 @@ import {
 import styles from './ArticleParamsForm.module.scss';
 import { Separator } from 'src/ui/separator';
 import { RadioGroup } from 'src/ui/radio-group';
+import { useOutsideClickClose } from 'src/ui/select/hooks/useOutsideClickClose';
 
 type articleProps = {
 	articleStateSubmit: (newState: ArticleStateType) => void;
@@ -27,6 +28,13 @@ type articleProps = {
 export const ArticleParamsForm = (props: articleProps) => {
 	const [sideBarState, setSideBarState] = useState(defaultArticleState);
 	const [openMenu, setOpenMenu] = useState<boolean>(false);
+	const menuRef = useRef<HTMLDivElement>(null);
+
+	useOutsideClickClose({
+		isOpen: openMenu,
+		rootRef: menuRef,
+		onChange: setOpenMenu,
+	});
 
 	const toogleMenuVisibility = () => {
 		setOpenMenu((openMenu) => !openMenu);
@@ -57,6 +65,7 @@ export const ArticleParamsForm = (props: articleProps) => {
 		<>
 			<ArrowButton isOpen={openMenu} onClick={toogleMenuVisibility} />
 			<aside
+				ref={menuRef}
 				className={clsx(styles.container, openMenu && styles.container_open)}>
 				<form className={styles.form} onSubmit={handleSubmitArticleState}>
 					<Text as='h2' weight={800} size={31} uppercase>
