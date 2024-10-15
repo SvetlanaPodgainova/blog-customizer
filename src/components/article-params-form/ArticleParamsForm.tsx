@@ -18,7 +18,7 @@ import {
 import styles from './ArticleParamsForm.module.scss';
 import { Separator } from 'src/ui/separator';
 import { RadioGroup } from 'src/ui/radio-group';
-import { useOutsideClickClose } from 'src/ui/select/hooks/useOutsideClickClose';
+import { useClose } from 'src/ui/select/hooks/useClose';
 
 type articleProps = {
 	articleStateSubmit: (newState: ArticleStateType) => void;
@@ -30,14 +30,14 @@ export const ArticleParamsForm = (props: articleProps) => {
 	const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 	const menuRef = useRef<HTMLDivElement>(null);
 
-	useOutsideClickClose({
+	useClose({
 		isOpen: isMenuOpen,
 		rootRef: menuRef,
-		onChange: setIsMenuOpen,
+		onClose: () => setIsMenuOpen(false),
 	});
 
 	const toogleMenuVisibility = () => {
-		setIsMenuOpen((openMenu) => !openMenu);
+		setIsMenuOpen((isMenuOpen) => !isMenuOpen);
 	};
 
 	const handleSetSideBarState = (
@@ -72,7 +72,10 @@ export const ArticleParamsForm = (props: articleProps) => {
 			<aside
 				ref={menuRef}
 				className={clsx(styles.container, isMenuOpen && styles.container_open)}>
-				<form className={styles.form} onSubmit={handleSubmitArticleState}>
+				<form
+					className={styles.form}
+					onSubmit={handleSubmitArticleState}
+					onReset={handleResetSideBarState}>
 					<Text as='h2' weight={800} size={31} uppercase>
 						задайте параметры
 					</Text>
@@ -115,12 +118,7 @@ export const ArticleParamsForm = (props: articleProps) => {
 						onChange={(option) => handleSetSideBarState('contentWidth', option)}
 					/>
 					<div className={styles.bottomContainer}>
-						<Button
-							title='Сбросить'
-							htmlType='reset'
-							type='clear'
-							onClick={handleResetSideBarState}
-						/>
+						<Button title='Сбросить' htmlType='reset' type='clear' />
 						<Button title='Применить' htmlType='submit' type='apply' />
 					</div>
 				</form>
